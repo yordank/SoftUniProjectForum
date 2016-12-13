@@ -1,0 +1,109 @@
+﻿@model IEnumerable<object>
+ 
+@{
+    Forum.Models.Post post = Model.ToList()[1] as Forum.Models.Post;
+
+    List<Forum.Models.Post> answers = Model.ToList()[0] as List<Forum.Models.Post>;
+  
+}
+
+
+<h2>Answers</h2>
+
+
+
+ 
+   
+            @Html.ActionLink("Reply", "ListAnswers", "Post", new { id = ViewBag.question.PostId,reply=1 }, null)
+        <br />
+    @if (ViewBag.reply == 1)
+    {
+    
+            
+                    using (Html.BeginForm("CreatePost", "Post", new { id = ViewBag.question.PostId }, FormMethod.Post, new {@class = "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary("", new { @class = "text-danger" })
+
+
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => post.Title, new { @class = "control-label col-sm-4" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(m => post.Title, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => post.Content, new { @class = "control-label col-sm-4" })
+                            <div class="col-sm-4">
+                                @Html.TextAreaFor(m => post.Content, new { @class = "form-control", @rows = "7" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-4">
+                                @Html.ActionLink("Cancel", "ListQuestions", "Post", null, new { @class = "btn btn-default" })
+                                <input type="submit" value="Post" class="btn btn-success" />
+                            </div>
+                        </div>
+                    }
+                    
+         
+    }
+
+
+ 
+
+
+
+<div class="container">
+    <div class="well">
+
+        <table class="table table-striped table-hover">
+            <tbody>
+                <tr>
+
+
+                    <td>@ViewBag.question.Title</td>
+                    <td>@ViewBag.question.Author.FullName</td>
+                </tr>
+
+                <tr>
+                    <td>@ViewBag.question.Content</td>
+                </tr>
+               
+               
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+ 
+@foreach (var answer in answers)
+{
+    <div class="container" style="margin-left:100px">
+        <div class="well">
+            <table class="table table-striped table-hover">
+
+
+                <tbody>
+
+                    <tr>
+
+
+                        <td>@answer.Title</td>
+                        <td>@answer.Author.FullName</td>
+                    </tr>
+
+                    <tr>
+                        <td>@answer.Content</td>
+                    </tr>
+
+                  
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+                                }

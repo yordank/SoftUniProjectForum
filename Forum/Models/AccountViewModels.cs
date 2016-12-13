@@ -64,6 +64,13 @@ namespace Forum.Models
 
     public class RegisterViewModel
     {
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "FullName")]
+        public string FullName { get; set; }
+
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

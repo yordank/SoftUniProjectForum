@@ -15,6 +15,8 @@ namespace Forum.Models
         {
         }
 
+        public virtual IDbSet<Post> Posts { get; set; }
+
         public static ForumDbContext Create()
         {
             return new ForumDbContext();
