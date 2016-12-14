@@ -31,8 +31,11 @@ namespace Forum.Models
         public virtual Post Parent { get; set; }
 
 
-       
 
+        public bool isAuthor(string name)
+        {
+            return this.Author.UserName.Equals(name);
+        }
 
 
     }

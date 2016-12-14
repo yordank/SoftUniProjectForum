@@ -5,7 +5,7 @@
 }
 
 <div class="container">
-    <div class="well">
+    <div class="well" style="border-style:solid">
         <h2>Answers</h2>
 
         <table class="table table-striped table-hover">
@@ -42,13 +42,6 @@
                               
                             @{var imgUrl = Url.Content("~/Content/images/profile/" + question.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
                               
-
-
-                            
-                             
-                          
-                           
-
                             <object data="@imgUrl"  type="image/png"  height="25" width="25">
                                 <img src="~/Content/images/Smiley.svg.png" height="25" width="25" />
                             </object>

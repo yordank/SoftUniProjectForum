@@ -11,7 +11,8 @@ namespace Forum.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("ListQuestions", "Post");
+            // return RedirectToAction("ListQuestions", "Post");
+            return View();
         }
        
 

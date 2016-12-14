@@ -14,7 +14,8 @@ namespace Forum.Controllers
         // GET: Post
         public ActionResult Index()
         {
-            return View("ListQuestions");
+           // return View("ListQuestions");
+            return RedirectToAction("ListQuestions");
         }
 
 
@@ -37,6 +38,7 @@ namespace Forum.Controllers
 
                 ViewBag.question = database.Posts.Where(x => x.PostId == id).Include(a => a.Author).First();
 
+                
                 if (reply == 1)
                     
                     ViewBag.reply = 1;
@@ -44,13 +46,19 @@ namespace Forum.Controllers
                     ViewBag.reply = 0;
 
                 List<Object> model = new List<object>();
+
+                                                       
+
                 model.Add(answers);
 
                 Post post = new Post();
                 model.Add(post);
+
                 return View(model);
             }
         }
+
+
 
         [Authorize]
         public ActionResult CreatePost()
@@ -85,8 +93,122 @@ namespace Forum.Controllers
             return View(post);
         }
 
+        [HttpGet]
+        public ActionResult Delete(int? id)
+        {
 
-         
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            using (var database = new ForumDbContext())
+            {
+                var post = database.Posts.Where(p=>p.PostId == id).Include(p => p.Author).First();
+                      
+
+                if (post == null)
+                {
+                    return HttpNotFound();
+                }
+                 
+                return View(post);
+
+            }
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirm(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            }
+
+            using (var database = new ForumDbContext())
+            {
+                var post = database.Posts.Where(x => x.PostId == id).Include(a => a.Author).First();
+                if (post == null)
+                {
+                    return HttpNotFound();
+                }
+
+                foreach (var item in database.Posts.Where(x=>x.ParentPostId==post.PostId))
+                {
+                   database.Posts.Remove(item);
+                }
+
+                database.Posts.Remove(post);
+                database.SaveChanges();
+            }
+
+            return RedirectToAction("ListQuestions","Post");
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            using (var database = new ForumDbContext())
+            {
+                var post = database.Posts.Where(x => x.PostId == id).First();
+                if (post == null)
+                    return HttpNotFound();
+
+                if (!isUserAuthorizedToEdit(post))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+
+                
+
+                return View(post);
+
+            }
+
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Post post)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var database = new ForumDbContext())
+                {
+
+                    var postElem = database.Posts.FirstOrDefault(p=>p.PostId == post.PostId);
+
+                    postElem.Title = post.Title;
+                    postElem.Content = post.Content;
+
+                    database.Entry(postElem).State = EntityState.Modified;
+                    database.SaveChanges();
+
+                    return RedirectToAction("Index");
+
+                }
+            }
+
+            return View(post);
+
+        }
+
+        private bool isUserAuthorizedToEdit(Post post)
+        {
+            bool isAdmin = this.User.IsInRole("Admin");
+            bool isAuthor = post.isAuthor(this.User.Identity.Name);
+            
+            return isAdmin || isAuthor;
+
+        }
+
 
 
     }
