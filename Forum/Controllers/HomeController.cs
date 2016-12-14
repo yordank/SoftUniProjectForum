@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,9 +11,9 @@ namespace Forum.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("ListQuestions", "Post");
         }
-
        
+
     }
 }

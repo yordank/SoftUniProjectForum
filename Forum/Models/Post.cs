@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 namespace Forum.Models
@@ -28,6 +29,11 @@ namespace Forum.Models
         public int? ParentPostId { get; set; }
         [ForeignKey("ParentPostId")]
         public virtual Post Parent { get; set; }
+
+
+       
+
+
 
     }
 }

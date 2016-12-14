@@ -1,9 +1,5 @@
-﻿
-
-
-
-@model List<Forum.Models.Post>
-
+﻿@model List<Forum.Models.Post>
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "ListQuestions";
 }
@@ -17,8 +13,8 @@
                 
                 <tr>
                     <th>Title</th>
-                    <th>Author</th>
-
+                    <th>Author Name</th>
+                    <th>Author Picture</th>
                 </tr>
             </thead>
 
@@ -38,7 +34,32 @@
                     <tr>
                  
                         <td>@Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId }, null)</td>
-                        <td>@question.Author.FullName</td>
+                        <td>@Html.ActionLink(question.Author.FullName, "Details", "Account", new { @id = question.Author.Id }, null)</td>
+                        
+                        <td>                      
+                            
+
+                              
+                            @{var imgUrl = Url.Content("~/Content/images/profile/" + question.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
+                              
+
+
+                            
+                             
+                          
+                           
+
+                            <object data="@imgUrl"  type="image/png"  height="25" width="25">
+                                <img src="~/Content/images/Smiley.svg.png" height="25" width="25" />
+                            </object>
+
+                               
+                            
+                       </td>
+
+                        <td>@Html.ActionLink("Edit", "Edit", "Post", new { @id = question.PostId }, new { @class = "btn btn-success btn-xs" })</td>
+                        <td>@Html.ActionLink("Delete", "Delete", "Post", new { @id = question.PostId }, new { @class = "btn btn-danger btn-xs" })</td>
+
                     </tr>
                 }
 

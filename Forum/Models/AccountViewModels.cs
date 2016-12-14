@@ -116,4 +116,26 @@ namespace Forum.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+
+
+    public class AccountDetailsViewModel
+    {
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "FullName")]
+        public string FullName { get; set; }
+
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "UserName")]
+        public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "UserName")]
+        public int countPosts { get; set; }
+
+    }
+
 }

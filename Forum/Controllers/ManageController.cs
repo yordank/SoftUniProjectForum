@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Forum.Models;
+using System.IO;
+using System.Web.Hosting;
 
 namespace Forum.Controllers
 {
@@ -61,6 +63,8 @@ namespace Forum.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                : message == ManageMessageId.PhotoUploadSuccess ? "Your photo has been uploaded."
+                : message == ManageMessageId.FileExtensionError ? "Only jpg, png and gif file formats are allowed."
                 : "";
 
             var userId = User.Identity.GetUserId();
@@ -333,7 +337,45 @@ namespace Forum.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+
+        #region Upload Photo
+
+        [HttpPost]
+        public async Task<ActionResult> UploadPhoto(HttpPostedFileBase file)
+        {
+            //https://github.com/DevsOne/Mvc5Project/blob/master/Mvc5Project/Views/Manage/Index.cshtml
+            //https://www.youtube.com/watch?v=HU5tHJyHSpE
+            if (file != null && file.ContentLength > 0)
+            {
+                var user = await GetCurrentUserAsync();
+                var username = user.UserName;
+                var fileExt = Path.GetExtension(file.FileName);
+                var fnm = username + ".png";
+                if (fileExt.ToLower().EndsWith(".png") || fileExt.ToLower().EndsWith(".jpg") || fileExt.ToLower().EndsWith(".gif"))// Important for security if saving in webroot
+                {
+                    var filePath = HostingEnvironment.MapPath("~/Content/images/profile/") + fnm;
+                   
+                    var directory = new DirectoryInfo(HostingEnvironment.MapPath("~/Content/images/profile/"));
+                    if (directory.Exists == false)
+                    {
+                        directory.Create();
+                    }
+                    ViewBag.FilePath = filePath.ToString();
+                    file.SaveAs(filePath);
+                    return RedirectToAction("Index", new { Message = ManageMessageId.PhotoUploadSuccess });
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { Message = ManageMessageId.FileExtensionError });
+                }
+            }
+            return RedirectToAction("Index", new { Message = ManageMessageId.Error });// PRG
+        }
+
+        #endregion Upload Photo
+
+
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -381,9 +423,16 @@ namespace Forum.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
-            Error
+            Error,
+            PhotoUploadSuccess,
+            FileExtensionError
         }
 
-#endregion
+        private async Task<ApplicationUser> GetCurrentUserAsync()
+        {
+            return await UserManager.FindByIdAsync(User.Identity.GetUserId());
+        }
+
+        #endregion
     }
 }

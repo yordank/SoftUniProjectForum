@@ -7,6 +7,15 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
+            @{
+                var imgUrl = Url.Content("~/Content/images/profile/" + User.Identity.GetUserName() + ".png") + "?time=" + DateTime.Now.ToString();
+            }
+            <object data="@imgUrl" type="image/png" height="50" width="50">
+                <img src="~/Content/images/Smiley.svg.png" height="50" width="50" />
+            </object>
+        </li>
+
+        <li>
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>

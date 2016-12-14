@@ -9,9 +9,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Forum.Models;
+using System.Net;
 
 namespace Forum.Controllers
 {
+
+
     [Authorize]
     public class AccountController : Controller
     {
@@ -422,6 +425,42 @@ namespace Forum.Controllers
 
             base.Dispose(disposing);
         }
+
+        [Authorize]
+        public ActionResult Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            using (var database = new ForumDbContext())
+            {
+                var user = database.Users.Where(x => x.Id.Equals(id)).First();
+
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+
+                else
+                {
+                    var userDetails = new AccountDetailsViewModel();
+                    userDetails.FullName = user.FullName;
+                    userDetails.UserName = user.UserName;
+
+                    string UserId = user.Id;
+                    userDetails.countPosts = database.Posts.Count(x => x.AuthorId == UserId);
+                    return View(userDetails);
+                }
+
+
+            }
+
+
+
+        }
+
 
         #region Helpers
         // Used for XSRF protection when adding external logins

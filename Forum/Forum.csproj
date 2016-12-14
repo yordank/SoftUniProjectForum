@@ -272,6 +272,7 @@
     <Content Include="Views\Post\ListQuestions.cshtml" />
     <Content Include="Views\Post\ListAnswers.cshtml" />
     <Content Include="Views\Post\CreatePost.cshtml" />
+    <Content Include="Views\Account\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

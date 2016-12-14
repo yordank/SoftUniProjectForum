@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -51,6 +52,7 @@ namespace Forum.Controllers
             }
         }
 
+        [Authorize]
         public ActionResult CreatePost()
         {
             return View();
@@ -82,5 +84,10 @@ namespace Forum.Controllers
 
             return View(post);
         }
+
+
+         
+
+
     }
 }
