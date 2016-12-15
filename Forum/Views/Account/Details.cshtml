@@ -1,0 +1,52 @@
+﻿@model Forum.Models.AccountDetailsViewModel
+
+@{
+    ViewBag.Title = "DetailsUser";
+}
+
+<div class="container">
+   <div class="well">
+       
+       <table >
+
+           <tr>
+               <td>
+                   <div class="accimg">
+                       @{var imgUrl = Url.Content("~/Content/images/profile/" + Model.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
+
+
+                       <object data="@imgUrl" type="image/png" height="250" width="250">
+                           <img src="~/Content/images/Smiley.svg.png" height="250" width="250" />
+                       </object>
+
+
+                   </div>
+               </td>
+                
+           </tr>
+
+           <tr>
+               <td><h3>Name:</h3></td>
+               <td>
+                   <h3>@Model.FullName</h3>
+               </td>
+
+           </tr>
+           <tr>
+               <td>
+                   <h3>Posts:</h3>
+               </td>
+               <td>
+                   <h3>@Model.countPosts</h3>
+               </td>
+           </tr>
+          
+
+       </table>
+       
+
+
+      
+</div>
+    </div>
+<hr />

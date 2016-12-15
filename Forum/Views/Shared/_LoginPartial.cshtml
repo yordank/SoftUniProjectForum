@@ -10,9 +10,11 @@
             @{
                 var imgUrl = Url.Content("~/Content/images/profile/" + User.Identity.GetUserName() + ".png") + "?time=" + DateTime.Now.ToString();
             }
-            <object data="@imgUrl" type="image/png" height="50" width="50">
-                <img src="~/Content/images/Smiley.svg.png" height="50" width="50" />
-            </object>
+           
+                <object data="@imgUrl" type="image/png" height="50" width="50"  >
+                    <img src="~/Content/images/Smiley.svg.png" height="50" width="50"  />
+                </object>
+            
         </li>
 
         <li>

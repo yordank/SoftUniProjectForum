@@ -7,10 +7,15 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace Forum.Controllers
 {
+
+    
     public class PostController : Controller
     {
+         static int postsPerPage = 10;
+         static int pagingCoeff = 2;
         // GET: Post
         public ActionResult Index()
         {
@@ -30,7 +35,7 @@ namespace Forum.Controllers
         }
 
         
-        public ActionResult ListAnswers(int id,int? reply)
+        public ActionResult ListAnswers(int id,int? reply,int page)
         {
             using (var database = new ForumDbContext())
             {
@@ -40,24 +45,41 @@ namespace Forum.Controllers
 
                 
                 if (reply == 1)
-                    
                     ViewBag.reply = 1;
                 else
                     ViewBag.reply = 0;
 
+
+
+                ViewBag.page = page;
+
+                int pageCount = answers.Count() / postsPerPage + 1;
+                ViewBag.pages = pageCount;
+
+                ViewBag.pagingElems = this.pagingNumbers(pageCount, page);
+
                 List<Object> model = new List<object>();
 
-                                                       
+               
+                int count =Math.Min( answers.Count(),page*postsPerPage);
 
-                model.Add(answers);
+                var answersPerPage = answers.Skip((page-1)*postsPerPage).Take(count).ToList();
+
+                model.Add(answersPerPage);
 
                 Post post = new Post();
+
                 model.Add(post);
 
                 return View(model);
             }
         }
 
+        private List<Post>getPagePost(List<Post>list)
+        {
+            return list;
+
+        }
 
 
         [Authorize]
@@ -68,7 +90,7 @@ namespace Forum.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult CreatePost(Post post,int? id)
+        public ActionResult CreatePost(Post post,int? id,int? page)
         {
 
             if (ModelState.IsValid)
@@ -84,7 +106,8 @@ namespace Forum.Controllers
                     if(id==null)
                     return RedirectToAction("ListQuestions");
                     else
-                    return RedirectToAction("ListAnswers","Post", new { id = id });
+                    return RedirectToAction("ListAnswers","Post", new { id = id ,page=page});
+
                 }
 
 
@@ -209,6 +232,26 @@ namespace Forum.Controllers
 
         }
 
+        private List<int>pagingNumbers(int count,int current)
+        {
+            List<int> pagesDisplayed = new List<int>();
+
+            pagesDisplayed.Add(1);
+
+            for (int i = 2; i <= count-1; i++)
+            {
+                if (Math.Abs(current - i) <= pagingCoeff)
+                    pagesDisplayed.Add(i);
+            }
+
+            pagesDisplayed.Add(count);
+
+            pagesDisplayed.Distinct();
+
+            return pagesDisplayed;
+
+
+        }
 
 
     }

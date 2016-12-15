@@ -33,7 +33,7 @@
                     @:
                     <tr>
                  
-                        <td>@Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId }, null)</td>
+                        <td>@Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId,@page=1 }, null)</td>
                         <td>@Html.ActionLink(question.Author.FullName, "Details", "Account", new { @id = question.Author.Id }, null)</td>
                         
                         <td>                      

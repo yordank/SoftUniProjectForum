@@ -19,9 +19,7 @@
     <br />
     @if (ViewBag.reply == 1)
     {
-
-
-        using (Html.BeginForm("CreatePost", "Post", new { id = ViewBag.question.PostId }, FormMethod.Post, new { @class = "form-horizontal" }))
+        using (Html.BeginForm("CreatePost", "Post", new { id = ViewBag.question.PostId, page = ViewBag.pages }, FormMethod.Post, new { @class = "form-horizontal" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary("", new { @class = "text-danger" })
@@ -57,10 +55,42 @@
 
         <div class="container">
             <div class="well">
-                <div class="cols-sm-3">
-                    @Html.ActionLink("Comment", "ListAnswers", "Post", new { id = ViewBag.question.PostId, reply = 1 }, new { @class = "btn btn-warning" })
-                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        @Html.ActionLink("Comment", "ListAnswers", "Post", new { id = ViewBag.question.PostId, reply = 1, page = @ViewBag.page }, new { @class = "btn btn-warning" })
+                    </div>
+                    <div class="col-sm-4">
+                      
+                    </div>
+                    <div class="col-sm-5" align="center">
+                        <ul class="pagination">
+                            @{
+                                int prevPage = 0;
+                                List<int>pagingList = ViewBag.pagingElems;
+                                
+                             }
 
+                            @for (int i = 0; i < pagingList.Count(); i++)
+                            {
+                                prevPage = pagingList[i];
+
+                                <li>
+                                   @Html.ActionLink(pagingList[i].ToString(), "ListAnswers", "Post", new { @id =ViewBag.question.PostId, @page = pagingList[i] }, null)
+                               </li>
+
+
+                                if (i < pagingList.Count() - 1 && pagingList[i + 1] != pagingList[i] + 1)
+                                {
+                                    <li>@Html.ActionLink("...","Index","Home") </li>
+
+                                }
+
+
+                            }
+                        </ul>
+                       
+                    </div>
+                </div>
            </div>
        </div>
 
@@ -71,37 +101,53 @@
 
             <div class="row">
                 <div class="container">
-                    <div class="well">
+                    <div class="well " style="background-color:#f5f694">
 
 
-
-                        <div class="row" >
-                             
-                            <div class="col-sm-10"  >
-                                <h3> @ViewBag.question.Title</h3>
-                            </div>
-
-                            <div class="col-sm-1">
-                                @Html.ActionLink((string)@ViewBag.question.Author.FullName, "Details", "Account", new { @id = ViewBag.question.Author.Id }, null)
-                                     
-                              </div>
-
-                            <div class="col-sm-1">
-                                @{var imgUrlAuthor = Url.Content("~/Content/images/profile/" + @ViewBag.question.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
-                                <object data="@imgUrlAuthor" type="image/png" height="50" width="50">
-                                    <img src="~/Content/images/Smiley.svg.png" height="50" width="50" />
-                                </object>
-                            </div>
-
-                        </div>
 
                         <div class="row">
-                            <div class="col-sm-12">
-                                @ViewBag.question.Content
+
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h3>@ViewBag.question.Title</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        @ViewBag.question.Content
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-2">
+
+
+                                <div class="row " align="center">
+                                    @{var imgUrlAuthor = Url.Content("~/Content/images/profile/" + @ViewBag.question.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
+                                    <object data="@imgUrlAuthor" type="image/png" height="50" width="50">
+                                        <img src="~/Content/images/Smiley.svg.png" height="50" width="50" />
+                                    </object>
+                                </div>
+
+                                <div class="row" align="center">
+                                    @Html.ActionLink((string)ViewBag.question.Author.FullName, "Details", "Account", new { @id = ViewBag.question.Author.Id }, null)
+                                </div>
+
 
                             </div>
 
+
+
                         </div>
+
+                         
+
+                         
 
                     </div>
                 </div>
@@ -117,35 +163,49 @@
                     <div class="container">
                         <div class="well">
 
-
+                             
 
                             <div class="row">
 
                                 <div class="col-sm-10">
-                                    <h3> @answer.Title</h3>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h3>@answer.Title</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                         
+                                            <div class="col-sm-12">
+                                                @answer.Content
+                                            </div>
+
+                                        
+                                    </div>
                                 </div>
 
-                                <div class="col-sm-1">
 
-                                    @Html.ActionLink(answer.Author.FullName, "Details", "Account", new { @id = answer.Author.Id }, null)
-                                  
+                                <div class="col-sm-2">
+
+                                    
+                                    <div class="row " align="center">
+                                        @{var imgUrl = Url.Content("~/Content/images/profile/" + answer.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
+                                        <object data="@imgUrl" type="image/png" height="50" width="50">
+                                            <img src="~/Content/images/Smiley.svg.png" height="50" width="50" />
+                                        </object>
+                                    </div>
+
+                                    <div class="row" align="center">
+                                        @Html.ActionLink(answer.Author.FullName, "Details", "Account", new { @id = answer.Author.Id }, null)
+                                    </div>
+
+
                                 </div>
 
-                                <div class="col-sm-1">
-                                    @{var imgUrl = Url.Content("~/Content/images/profile/" + answer.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
-                                       <object data="@imgUrl" type="image/png" height="50" width="50">
-                                          <img src="~/Content/images/Smiley.svg.png" height="50" width="50" />
-                                       </object>
-                                </div>
+                               
 
                             </div>
 
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    @answer.Content
-                                </div>
-
-                            </div>
+                           
 
                         </div>
                     </div>
