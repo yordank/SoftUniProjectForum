@@ -49,10 +49,11 @@
                                
                             
                        </td>
-
+                        @if (User.IsInRole("Admin") || question.isAuthor(User.Identity.Name))
+                        {
                         <td>@Html.ActionLink("Edit", "Edit", "Post", new { @id = question.PostId }, new { @class = "btn btn-success btn-xs" })</td>
                         <td>@Html.ActionLink("Delete", "Delete", "Post", new { @id = question.PostId }, new { @class = "btn btn-danger btn-xs" })</td>
-
+                        }
                     </tr>
                 }
 

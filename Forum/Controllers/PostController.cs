@@ -128,7 +128,12 @@ namespace Forum.Controllers
             using (var database = new ForumDbContext())
             {
                 var post = database.Posts.Where(p=>p.PostId == id).Include(p => p.Author).First();
-                      
+
+
+                if (!isUserAuthorizedToEdit(post))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
 
                 if (post == null)
                 {
@@ -246,9 +251,9 @@ namespace Forum.Controllers
 
             pagesDisplayed.Add(count);
 
-            pagesDisplayed.Distinct();
+            
 
-            return pagesDisplayed;
+            return pagesDisplayed.Distinct().ToList();
 
 
         }
