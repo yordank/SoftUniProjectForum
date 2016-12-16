@@ -24,7 +24,7 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary("", new { @class = "text-danger" })
 
-
+            @Html.HiddenFor(m => post.CategoryId, new { Value = ViewBag.categoryId })
 
             <div class="form-group">
                 @Html.LabelFor(m => post.Title, new { @class = "control-label col-sm-2" })
@@ -62,7 +62,7 @@
                     <div class="col-sm-4">
                       
                     </div>
-                    <div class="col-sm-5" align="center">
+                    <div class="col-sm-5" align="right">
                         <ul class="pagination">
                             @{
                                 int prevPage = 0;

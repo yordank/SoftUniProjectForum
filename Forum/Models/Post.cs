@@ -10,6 +10,20 @@ namespace Forum.Models
 {
     public class Post
     {
+
+        public Post()
+        {
+            
+        }
+
+        public Post(string AuthorId, string title, string content, int categoryId)
+        {
+            this.AuthorId = AuthorId;
+            this.Title = title;
+            this.Content = content;
+            this.CategoryId = categoryId;
+        }
+
         [Key]
         public int PostId { get; set; }
 
@@ -30,7 +44,10 @@ namespace Forum.Models
         [ForeignKey("ParentPostId")]
         public virtual Post Parent { get; set; }
 
+        [ForeignKey("Category")]
+        public int CategoryId { get; set; }
 
+        public virtual Category Category { get; set; }
 
         public bool isAuthor(string name)
         {

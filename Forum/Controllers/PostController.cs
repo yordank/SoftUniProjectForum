@@ -17,18 +17,21 @@ namespace Forum.Controllers
          static int postsPerPage = 10;
          static int pagingCoeff = 2;
         // GET: Post
-        public ActionResult Index()
+        public ActionResult Index(int categoryId)
         {
            // return View("ListQuestions");
-            return RedirectToAction("ListQuestions");
+            return RedirectToAction("ListQuestions","Post", new { categoryId = categoryId });
         }
 
 
-        public ActionResult ListQuestions()
+        public ActionResult ListQuestions(int categoryId)
         {
             using (var database = new ForumDbContext())
             {
-                var questions = database.Posts.Where(x => x.ParentPostId == null).Include(a => a.Author).ToList();
+                var questions = database.Posts.Where(x => x.ParentPostId == null && x.CategoryId==categoryId).Include(a => a.Author).ToList();
+
+                ViewBag.categoryId = categoryId;
+
                 return View(questions);
             }
 
@@ -41,7 +44,9 @@ namespace Forum.Controllers
             {
                 var answers = database.Posts.Where(x => x.ParentPostId == id).Include(a => a.Author).ToList();
 
-                ViewBag.question = database.Posts.Where(x => x.PostId == id).Include(a => a.Author).First();
+                Post question = database.Posts.Where(x => x.PostId == id).Include(a => a.Author).First();
+
+                ViewBag.question = question;
 
                 
                 if (reply == 1)
@@ -49,7 +54,7 @@ namespace Forum.Controllers
                 else
                     ViewBag.reply = 0;
 
-
+                ViewBag.categoryId = question.CategoryId;
 
                 ViewBag.page = page;
 
@@ -83,8 +88,9 @@ namespace Forum.Controllers
 
 
         [Authorize]
-        public ActionResult CreatePost()
+        public ActionResult CreatePost(int categoryId)
         {
+            ViewBag.categoryId = categoryId;
             return View();
         }
 
@@ -104,9 +110,9 @@ namespace Forum.Controllers
                     database.SaveChanges();
 
                     if(id==null)
-                    return RedirectToAction("ListQuestions");
+                    return RedirectToAction("ListQuestions","Post",new { categoryId=post.CategoryId});
                     else
-                    return RedirectToAction("ListAnswers","Post", new { id = id ,page=page});
+                    return RedirectToAction("ListAnswers","Post", new { id = id , categoryId = post.CategoryId, page=page});
 
                 }
 
@@ -155,6 +161,8 @@ namespace Forum.Controllers
 
             }
 
+            int categoryId;
+
             using (var database = new ForumDbContext())
             {
                 var post = database.Posts.Where(x => x.PostId == id).Include(a => a.Author).First();
@@ -168,11 +176,13 @@ namespace Forum.Controllers
                    database.Posts.Remove(item);
                 }
 
+                categoryId = post.CategoryId;
+
                 database.Posts.Remove(post);
                 database.SaveChanges();
             }
 
-            return RedirectToAction("ListQuestions","Post");
+            return RedirectToAction("ListQuestions","Post", new { categoryId = categoryId });
         }
 
         [HttpGet]
@@ -219,7 +229,7 @@ namespace Forum.Controllers
                     database.Entry(postElem).State = EntityState.Modified;
                     database.SaveChanges();
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", new { categoryId = postElem.CategoryId });
 
                 }
             }

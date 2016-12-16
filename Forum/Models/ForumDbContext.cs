@@ -17,6 +17,8 @@ namespace Forum.Models
 
         public virtual IDbSet<Post> Posts { get; set; }
 
+        public virtual IDbSet<Category> Categories { get; set; }
+
         public static ForumDbContext Create()
         {
             return new ForumDbContext();

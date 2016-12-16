@@ -6818,3 +6818,6 @@ td.visible-print {
   }
 }
 
+.borderless {
+ border:none;
+}

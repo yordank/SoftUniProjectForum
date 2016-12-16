@@ -1,7 +1,36 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model List<Forum.Models.Category>
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Forum Categories";
 }
 
- 
-            @Html.ActionLink("Forum", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-         
+<div class="container">
+    <div class="well" style="border-style:none">
+        <h2>Topics</h2>
+
+        <table class="borderless" style="font-size:30px">
+             
+
+            
+
+                
+
+
+
+                @foreach (var category in Model)
+                {
+                    @:
+                    <tr>
+
+                        <td>@Html.ActionLink(category.Name, "ListQuestions", "Post", new { @categoryId = category.Id }, null)</td>
+                        
+
+                        
+                       
+                    </tr>
+                                }
+
+            
+        </table>
+    </div>
+</div>

@@ -13,8 +13,11 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary("", new { @class = "text-danger" })
 
+               
+                @Html.HiddenFor(model => model.CategoryId, new { Value = ViewBag.categoryId })
 
                 <div class="form-group">
+
 
                     @Html.LabelFor(m => m.Title, new { @class = "control-label col-sm-2"})
                     <div class="col-lg-8">

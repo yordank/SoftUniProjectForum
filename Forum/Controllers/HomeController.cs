@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Forum.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,8 +12,13 @@ namespace Forum.Controllers
     {
         public ActionResult Index()
         {
-            // return RedirectToAction("ListQuestions", "Post");
-            return View();
+            using (var database = new ForumDbContext())
+            {
+                var categories = database.Categories.ToList();
+
+                return View(categories);
+            }
+           
         }
        
 
