@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<object>
  
 @{
-    Forum.Models.Post post = Model.ToList()[1] as Forum.Models.Post;
+    Forum.Models.PostViewModel post = Model.ToList()[1] as Forum.Models.PostViewModel;
 
     List<Forum.Models.Post> answers = Model.ToList()[0] as List<Forum.Models.Post>;
 
@@ -121,6 +121,23 @@
 
 
                                 </div>
+
+                                <div class="row">
+                                   
+                                    <div class="col-sm-1">
+                                        Tags
+                                    </div>
+                                     <div class="col-sm-11 pull-left">
+                                        @foreach (var tag in ViewBag.question.Tags)
+                                        {
+                                            @Html.ActionLink((string)tag.Name, "List", "Tag", new { @id = tag.Id }, new { @class = "btn btn-default btn-xs" })
+                                        }
+                                    </div>
+
+
+                                </div>
+
+
                             </div>
 
 

@@ -10,18 +10,28 @@ namespace Forum.Models
 {
     public class Post
     {
+        private ICollection<Tag> tags;
+
+        public virtual ICollection<Tag> Tags
+        {
+            get { return this.tags; }
+            set { this.tags = value; }
+        }
 
         public Post()
         {
-            
+            this.tags = new HashSet<Tag>();
         }
 
-        public Post(string AuthorId, string title, string content, int categoryId)
+        public Post(string AuthorId, string title, string content, int categoryId,int? ParentPostId)
         {
             this.AuthorId = AuthorId;
             this.Title = title;
             this.Content = content;
             this.CategoryId = categoryId;
+            this.ParentPostId = ParentPostId;
+            this.tags = new HashSet<Tag>();
+
         }
 
         [Key]

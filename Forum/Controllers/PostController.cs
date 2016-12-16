@@ -44,7 +44,7 @@ namespace Forum.Controllers
             {
                 var answers = database.Posts.Where(x => x.ParentPostId == id).Include(a => a.Author).ToList();
 
-                Post question = database.Posts.Where(x => x.PostId == id).Include(a => a.Author).First();
+                Post question = database.Posts.Where(x => x.PostId == id).Include(p => p.Author).Include(p=>p.Tags).First();
 
                 ViewBag.question = question;
 
@@ -72,7 +72,7 @@ namespace Forum.Controllers
 
                 model.Add(answersPerPage);
 
-                Post post = new Post();
+                PostViewModel post = new PostViewModel();
 
                 model.Add(post);
 
@@ -88,16 +88,22 @@ namespace Forum.Controllers
 
 
         [Authorize]
-        public ActionResult CreatePost(int categoryId)
+        public ActionResult CreatePost(int? categoryId)
         {
+            if (categoryId == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewBag.categoryId = categoryId;
             return View();
         }
 
         [HttpPost]
         [Authorize]
-        public ActionResult CreatePost(Post post,int? id,int? page)
+        public ActionResult CreatePost(PostViewModel post,int? id,int? page)
         {
+           
 
             if (ModelState.IsValid)
             {
@@ -106,13 +112,30 @@ namespace Forum.Controllers
                     var authorId = database.Users.Where(x => x.UserName == this.User.Identity.Name).First().Id;
                     post.AuthorId = authorId;
                     post.ParentPostId = id;
-                    database.Posts.Add(post);
-                    database.SaveChanges();
 
-                    if(id==null)
-                    return RedirectToAction("ListQuestions","Post",new { categoryId=post.CategoryId});
+                    var newPost = new Post(post.AuthorId, post.Title, post.Content, post.CategoryId,post.ParentPostId);
+
+                    this.SetArticleTags(newPost, post.Tags, database);
+
+                    if (id == null)
+                    {
+                        
+ 
+                        database.Posts.Add(newPost);
+                        database.SaveChanges();
+
+                        return RedirectToAction("ListQuestions", "Post", new { categoryId = post.CategoryId });
+                    }
+
                     else
-                    return RedirectToAction("ListAnswers","Post", new { id = id , categoryId = post.CategoryId, page=page});
+                    {
+                        database.Posts.Add(newPost);
+                        database.SaveChanges();
+                      
+                        return RedirectToAction("ListAnswers", "Post", new { id = id, categoryId = post.CategoryId, page = page });
+                    }
+                    
+                  
 
                 }
 
@@ -197,6 +220,7 @@ namespace Forum.Controllers
             using (var database = new ForumDbContext())
             {
                 var post = database.Posts.Where(x => x.PostId == id).First();
+
                 if (post == null)
                     return HttpNotFound();
 
@@ -205,16 +229,26 @@ namespace Forum.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
                 }
 
-                
 
-                return View(post);
+                var model = new PostViewModel();
+                model.PostId = post.PostId;
+                model.Title = post.Title;
+                model.AuthorId = post.AuthorId;
+                model.Content =  post.Content;
+                model.CategoryId = post.CategoryId;
+                model.ParentPostId = post.ParentPostId;
+
+                model.Tags = string.Join(", ", post.Tags.Select(t => t.Name));
+
+
+                return View(model);
 
             }
 
         }
 
         [HttpPost]
-        public ActionResult Edit(Post post)
+        public ActionResult Edit(PostViewModel post)
         {
             if (ModelState.IsValid)
             {
@@ -225,6 +259,8 @@ namespace Forum.Controllers
 
                     postElem.Title = post.Title;
                     postElem.Content = post.Content;
+
+                    this.SetArticleTags(postElem, post.Tags, database);
 
                     database.Entry(postElem).State = EntityState.Modified;
                     database.SaveChanges();
@@ -267,6 +303,34 @@ namespace Forum.Controllers
 
 
         }
+
+
+        private void SetArticleTags(Post post, string tags, ForumDbContext database)
+        {
+            if (tags != null)
+            {
+                var tagsString = tags.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(t => t.ToLower()).Distinct();
+
+                post.Tags.Clear();
+
+                foreach (var tagString in tagsString)
+                {
+                    Tag tag = database.Tags.FirstOrDefault(x => x.Name.Equals(tagString));
+
+                    if (tag == null)
+                    {
+                        tag = new Tag() { Name = tagString };
+                        database.Tags.Add(tag);
+
+                    }
+
+                    post.Tags.Add(tag);
+                }
+            }
+
+
+        }
+        
 
 
     }

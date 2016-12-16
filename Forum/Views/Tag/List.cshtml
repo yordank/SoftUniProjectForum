@@ -1,0 +1,60 @@
+﻿@model List<Forum.Models.Post>
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "ListQuestions";
+}
+
+<div class="container">
+    <div class="well" style="border-style:solid">
+        <h2>Topics by tag</h2>
+
+        <table class="table table-striped table-hover">
+            <thead>
+
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Author Name</th>
+                    <th>Author Picture</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                 
+
+
+
+                @foreach (var question in Model)
+                {
+                    @:
+                    <tr>
+                        <td align="center"><img src="~/Content/images/topic.png" /></td>
+                        <td>@Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId, @page = 1 }, null)</td>
+                        <td>@Html.ActionLink(question.Author.FullName, "Details", "Account", new { @id = question.Author.Id }, null)</td>
+
+                        <td>
+
+
+
+                            @{var imgUrl = Url.Content("~/Content/images/profile/" + question.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
+
+                            <object data="@imgUrl" type="image/png" height="30" width="30">
+                                <img src="~/Content/images/Smiley.svg.png" height="30" width="30" />
+                            </object>
+
+
+
+                        </td>
+                        @if (User.IsInRole("Admin") || question.isAuthor(User.Identity.Name))
+                        {
+                            <td>@Html.ActionLink("Edit", "Edit", "Post", new { @id = question.PostId }, new { @class = "btn btn-success btn-xs" })</td>
+                            <td>@Html.ActionLink("Delete", "Delete", "Post", new { @id = question.PostId }, new { @class = "btn btn-danger btn-xs" })</td>
+                        }
+                    </tr>
+                                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
