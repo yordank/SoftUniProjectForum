@@ -24,15 +24,24 @@ namespace Forum.Controllers
         }
 
 
-        public ActionResult ListQuestions(int categoryId)
+        public ActionResult ListQuestions(int categoryId,int page)
         {
             using (var database = new ForumDbContext())
             {
-                var questions = database.Posts.Where(x => x.ParentPostId == null && x.CategoryId==categoryId).Include(a => a.Author).ToList();
+                var questions = database.Posts.Where(x => x.ParentPostId == null && x.CategoryId==categoryId).Include(a => a.Author).OrderBy(x => -x.PostId).ToList();
+
+                int pageCount = questions.Count() / postsPerPage + 1;
+                ViewBag.pages = pageCount;
+
+                ViewBag.pagingElems = this.pagingNumbers(pageCount, page);
 
                 ViewBag.categoryId = categoryId;
 
-                return View(questions);
+                int count =Math.Min( questions.Count(),page*postsPerPage);
+
+                var questionsPerPage = questions.Skip((page - 1) * postsPerPage).Take(count).ToList();
+
+                return View(questionsPerPage);
             }
 
         }
@@ -124,7 +133,7 @@ namespace Forum.Controllers
                         database.Posts.Add(newPost);
                         database.SaveChanges();
 
-                        return RedirectToAction("ListQuestions", "Post", new { categoryId = post.CategoryId });
+                        return RedirectToAction("ListQuestions", "Post", new { categoryId = post.CategoryId,page=1 });
                     }
 
                     else
@@ -205,7 +214,7 @@ namespace Forum.Controllers
                 database.SaveChanges();
             }
 
-            return RedirectToAction("ListQuestions","Post", new { categoryId = categoryId });
+            return RedirectToAction("ListQuestions","Post", new { categoryId = categoryId,page=1 });
         }
 
         [HttpGet]
@@ -265,7 +274,7 @@ namespace Forum.Controllers
                     database.Entry(postElem).State = EntityState.Modified;
                     database.SaveChanges();
 
-                    return RedirectToAction("Index", new { categoryId = postElem.CategoryId });
+                    return RedirectToAction("ListQuestions","Post", new { categoryId = postElem.CategoryId,page=1 });
 
                 }
             }

@@ -25,6 +25,39 @@
                     <td>
                         @Html.ActionLink("New Topic", "CreatePost", "Post", new { @categoryid = ViewBag.categoryId }, new { @class = "btn btn-warning" })
                     </td>
+                    
+                    <td></td>
+                    <td></td>
+                    
+                    <td align="right">
+                        <ul class="pagination">
+                            @{
+                                int prevPage = 0;
+                                List<int> pagingList = ViewBag.pagingElems;
+
+                            }
+
+                            @for (int i = 0; i < pagingList.Count(); i++)
+                            {
+                                prevPage = pagingList[i];
+
+                                <li>
+                                    @Html.ActionLink(pagingList[i].ToString(), "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = pagingList[i] }, null)
+                                </li>
+
+
+                                if (i < pagingList.Count() - 1 && pagingList[i + 1] != pagingList[i] + 1)
+                                {
+                                    <li>@Html.ActionLink("...", "Index", "Home") </li>
+
+                                }
+
+
+                            }
+                        </ul>
+
+                    </td>
+
                 </tr>
 
 
