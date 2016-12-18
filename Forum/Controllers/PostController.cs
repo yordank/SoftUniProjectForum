@@ -36,7 +36,8 @@ namespace Forum.Controllers
         {
            if(search.Opition.Equals("Tags"))
             {
-                int id = new ForumDbContext().Tags.Where(x => x.Name.Equals(search.Word)).Select(x => x.Id).First();
+                int id = new ForumDbContext().Tags.Where(x => x.Name.Equals(search.Word)).Select(x => x.Id).FirstOrDefault();
+                if(id>0)
                 return RedirectToAction("List", "Tag", new { @id = id });
             }
 
