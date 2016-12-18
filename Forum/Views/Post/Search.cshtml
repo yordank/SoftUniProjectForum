@@ -1,0 +1,46 @@
+﻿@model Forum.Models.SearchViewModel
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+
+ 
+
+<div class="container">
+    <div class="well">
+       
+        @Html.ValidationSummary()
+        @Html.AntiForgeryToken()
+
+        @using (Html.BeginForm("Search", "Post", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Word, new { @class = "control-label col-sm-4" })
+                <div class="col-sm-4">
+                    @Html.TextBoxFor(m => m.Word, new { @class = "form-control" })
+                </div>
+            </div>
+
+           
+
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-4">
+                 @Html.RadioButtonFor(m=>m.Opition, "Questions")  Questions <br />
+                 @Html.RadioButtonFor(m=>m.Opition, "Answers") Answers<br />
+                 @Html.RadioButtonFor(m => m.Opition, "Tags", true) Tags    
+                </div>
+            </div>
+
+          
+
+
+
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <input type="submit" value="Search" class="btn btn-success" />
+                </div>
+            </div>
+        }
+    </div>
+</div>

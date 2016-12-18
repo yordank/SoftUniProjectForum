@@ -23,6 +23,60 @@ namespace Forum.Controllers
             return RedirectToAction("ListQuestions","Post", new { categoryId = categoryId });
         }
 
+        [HttpGet]
+        public ActionResult Search()
+        {
+           
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Search(SearchViewModel search)
+        {
+           if(search.Opition.Equals("Tags"))
+            {
+                int id = new ForumDbContext().Tags.Where(x => x.Name.Equals(search.Word)).Select(x => x.Id).First();
+                return RedirectToAction("List", "Tag", new { @id = id });
+            }
+
+           if(search.Opition.Equals("Questions"))
+            {
+                List<Post> posts = new ForumDbContext().Posts.Where(x =>x.ParentPostId==null && x.Title.Contains(search.Word)).ToList();
+                if (posts != null)
+                {
+                    
+                    foreach (var item in posts)
+                    {
+                        item.Title=item.Title.Replace(search.Word, "<mark>" + search.Word + "</mark>");
+                         
+                    }
+                 return View("SearchListing",posts);
+                }
+            }
+
+            if (search.Opition.Equals("Answers"))
+            {
+                List<Post> posts2 = new ForumDbContext().Posts.Where(x => x.Content.Contains(search.Word) && x.ParentPostId!=null).ToList();
+                if (posts2 != null)
+                {
+
+                    foreach (var item in posts2)
+                    {
+                        item.Content = item.Content.Replace(search.Word, "<mark>" + search.Word + "</mark>");
+
+                    }
+                    return View("SearchListing", posts2);
+                }
+            }
+
+
+            return View();
+
+            
+        }
+
+        
 
         public ActionResult ListQuestions(int categoryId,int page)
         {
@@ -114,12 +168,7 @@ namespace Forum.Controllers
             }
         }
 
-        private List<Post>getPagePost(List<Post>list)
-        {
-            return list;
-
-        }
-
+        
 
         [Authorize]
         public ActionResult CreatePost(int? categoryId)
