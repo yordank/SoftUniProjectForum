@@ -1,6 +1,7 @@
 ﻿using Forum.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -14,7 +15,7 @@ namespace Forum.Controllers
         {
             using (var database = new ForumDbContext())
             {
-                var categories = database.Categories.ToList();
+                var categories = database.Categories.Include(c=>c.Posts).ToList();
 
                 return View(categories);
             }

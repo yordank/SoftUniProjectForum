@@ -6,13 +6,19 @@
 
 <div class="container">
     <div class="well" style="border-style:none">
-        <h2>Topics</h2>
+        <h2>Categories</h2>
 
         <table class="borderless" style="font-size:30px">
              
 
             
-
+            <thead>
+                <tr>
+                    <td>Category</td>
+                    <td>Topics</td>
+                    <td>Views</td>
+                </tr>
+            </thead>
                 
 
 
@@ -24,8 +30,9 @@
 
                         <td>@Html.ActionLink(category.Name, "ListQuestions", "Post", new { @categoryId = category.Id ,@page=1}, null)</td>
                         
-
-                        
+                        <td>@category.Posts.Count()</td>
+                        @{ List<int?> l = category.Posts.Select(x => x.Views).ToList();}
+                        <td>@l.Sum()</td>
                        
                     </tr>
                                 }
