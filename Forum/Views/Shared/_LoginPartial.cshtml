@@ -7,6 +7,10 @@
 
     <ul class="nav navbar-nav navbar-right">
 
+        <li>
+            @Html.ActionLink("User Ranking", "Ranking", "Account")
+        </li>
+
         @if (User.IsInRole("Admin"))
         {
             <li class="dropdown">

@@ -9,6 +9,7 @@ using Microsoft.Owin.Security;
 using Forum.Models;
 using System.IO;
 using System.Web.Hosting;
+using System.Data.Entity;
 
 namespace Forum.Controllers
 {
@@ -337,6 +338,7 @@ namespace Forum.Controllers
             base.Dispose(disposing);
         }
 
+      
 
         #region Upload Photo
 

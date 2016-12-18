@@ -1,0 +1,58 @@
+﻿@model List<Forum.Models.AccountDetailsViewModel>
+
+@{
+    ViewBag.Title = "List";
+}
+
+<div class="container">
+    <div class="well">
+        <h2>Users Ranking</h2>
+
+        <table class="table table-striped table-hover  ">
+            <thead>
+                <tr>
+                    <td style="vertical-align:middle;"><h1>#</h1></td>
+                    <td style="vertical-align:middle;"><h3>Profile</h3></td>
+                    <td style="vertical-align:middle;"><h3>Name</h3></td>
+                    <td style="vertical-align:middle;"><h3>Posts</h3></td>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{int counter = 1;}
+                @foreach (var user in Model)
+                { 
+                    
+                   
+                   
+                        @:<tr class="text">
+
+                    <th scope="row" style="vertical-align:middle"><h1>@counter</h1></th>
+                    
+                    
+                    counter++;
+
+                    <td  style="vertical-align:middle">
+                        @{var imgUrl = Url.Content("~/Content/images/profile/" + user.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
+
+
+                        <object data="@imgUrl" type="image/png" height="50" width="50">
+                            <img src="~/Content/images/Smiley.svg.png" height="50" width="50" />
+                        </object>
+                    </td>
+                    <td style="vertical-align:middle"><h3>@user.FullName</h3></td>
+                    <td style="vertical-align:middle"><h3>@user.countPosts</h3></td>
+                     
+                }
+
+        </tbody>
+    </table>
+</div>
+</div>
+
+@{
+    ViewBag.Title = "Ranking";
+}
+
+<h2>Ranking</h2>
+

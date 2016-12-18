@@ -9,17 +9,12 @@
         <h2>Topics</h2>
 
         <table class="table table-striped table-hover">
-            <thead>
+            
                 
-                <tr>
-                    <th></th>
-                    <th>Title</th>
-                    <th>Author Name</th>
-                    <th>Author Picture</th>
-                </tr>
-            </thead>
+              
+            
 
-            <tbody>
+            
                 
                 <tr>
                     <td>
@@ -28,7 +23,7 @@
                     
                     <td></td>
                     <td></td>
-                    
+                    <td></td>
                     <td align="right">
                         <ul class="pagination">
                             @{
@@ -61,13 +56,28 @@
                 </tr>
 
 
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Answers</th>
+                <th>Views</th>
+                <th>Author Name</th>
+                <th>Author Picture</th>
+            </tr>
 
+
+            @{int j = 0; }
                 @foreach (var question in Model)
                 {
                     @:
                     <tr>
                         <td align="center"><img  src="~/Content/images/topic.png"/></td>
                         <td>@Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId, @page=1 }, null)</td>
+                        
+                        <td>@ViewBag.answersPerTopic[j]</td>
+                        @{j++;}
+                        
+                        <td>@question.Views</td>
                         <td>@Html.ActionLink(question.Author.FullName, "Details", "Account", new { @id = question.Author.Id }, null)</td>
                         
                         <td>                      
@@ -91,7 +101,7 @@
                     </tr>
                 }
 
-            </tbody>
+            
         </table>
     </div>
 </div>

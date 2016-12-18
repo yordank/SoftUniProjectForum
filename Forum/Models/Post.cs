@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Forum.Models
         public Post()
         {
             this.tags = new HashSet<Tag>();
+            this.Views = 0;
         }
 
         public Post(string AuthorId, string title, string content, int categoryId,int? ParentPostId)
@@ -31,7 +33,7 @@ namespace Forum.Models
             this.CategoryId = categoryId;
             this.ParentPostId = ParentPostId;
             this.tags = new HashSet<Tag>();
-
+            this.Views = 0;
         }
 
         [Key]
@@ -64,6 +66,8 @@ namespace Forum.Models
             return this.Author.UserName.Equals(name);
         }
 
+        [DefaultValue(0)]
+        public int? Views { get; set; }
 
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Forum.Models;
 using System.Net;
+using System.Collections.Generic;
 
 namespace Forum.Controllers
 {
@@ -460,10 +461,38 @@ namespace Forum.Controllers
 
             }
 
+        }
 
+        #region Ranking
+
+        public ActionResult Ranking()
+        {
+            var users = new ForumDbContext().Users.ToList();
+
+            using (var database = new ForumDbContext())
+            {
+
+                List<AccountDetailsViewModel> usersRanking = new List<AccountDetailsViewModel>();
+
+                foreach (var user in users)
+                {
+                    var userDetails = new AccountDetailsViewModel();
+                    userDetails.FullName = user.FullName;
+                    userDetails.UserName = user.UserName;
+                    string UserId = user.Id;
+
+                    userDetails.countPosts = database.Posts.Count(x => x.AuthorId == UserId);
+                    
+                    usersRanking.Add(userDetails);
+
+                }
+
+                return View(usersRanking.OrderByDescending(x=>x.countPosts).ToList());
+            }
 
         }
 
+        #endregion Ranking
 
         #region Helpers
         // Used for XSRF protection when adding external logins

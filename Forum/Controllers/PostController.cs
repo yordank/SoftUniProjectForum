@@ -36,17 +36,33 @@ namespace Forum.Controllers
                 ViewBag.pagingElems = this.pagingNumbers(pageCount, page);
 
                 ViewBag.categoryId = categoryId;
+                
+               
 
                 int count =Math.Min( questions.Count(),page*postsPerPage);
 
                 var questionsPerPage = questions.Skip((page - 1) * postsPerPage).Take(count).ToList();
+
+                ViewBag.answersPerTopic = answersPerTopic(questionsPerPage, database);
 
                 return View(questionsPerPage);
             }
 
         }
 
-        
+        private List<int> answersPerTopic(List<Post> questions,ForumDbContext database)
+        {
+            List<int> answersPerTopic = new List<int>();
+
+            foreach (var item in questions)
+            {
+                var count = database.Posts.Where(x => x.ParentPostId == item.PostId).Count();
+                answersPerTopic.Add(count);
+            }
+
+            return answersPerTopic;
+        }
+
         public ActionResult ListAnswers(int id,int? reply,int page)
         {
             using (var database = new ForumDbContext())
@@ -54,6 +70,15 @@ namespace Forum.Controllers
                 var answers = database.Posts.Where(x => x.ParentPostId == id).Include(a => a.Author).ToList();
 
                 Post question = database.Posts.Where(x => x.PostId == id).Include(p => p.Author).Include(p=>p.Tags).First();
+
+                ////////////////
+                if (reply == null)
+                {
+                    question.Views++;
+                    database.Entry(question).State = EntityState.Modified;
+                    database.SaveChanges();
+                }
+               ///////////////
 
                 ViewBag.question = question;
 
