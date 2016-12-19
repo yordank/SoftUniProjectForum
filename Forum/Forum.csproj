@@ -295,6 +295,9 @@
     <Content Include="Views\Account\Ranking.cshtml" />
     <Content Include="Views\Post\Search.cshtml" />
     <Content Include="Views\Post\SearchListing.cshtml" />
+    <Content Include="Views\Shared\_ListAnswersPartial.cshtml" />
+    <Content Include="Views\Shared\_NavigationAndPagingListAnswers.cshtml" />
+    <Content Include="Views\Shared\_ListAnswersCreatePost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -63,6 +63,7 @@ namespace Forum.Models
 
         public bool isAuthor(string name)
         {
+            if (AuthorId == null) return false;
             return this.Author.UserName.Equals(name);
         }
 

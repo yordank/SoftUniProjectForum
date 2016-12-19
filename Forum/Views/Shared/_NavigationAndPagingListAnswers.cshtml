@@ -1,0 +1,69 @@
+﻿<div class="row">
+    <div class="container">
+        <div class="well">
+            <div class="row">
+
+                <div class="col-sm-2">
+                    @Html.ActionLink("Comment", "ListAnswers", "Post", new { id = ViewBag.question.PostId, reply = 1, page = @ViewBag.page }, new { @class = "btn btn-warning" })
+
+
+                </div>
+
+
+                <div class="col-sm-4">
+                    @{
+                        int catId = (int)ViewBag.question.CategoryId;
+                        var CategoryName = new Forum.Models.ForumDbContext().Categories.Where(x => x.Id == catId).FirstOrDefault().Name;
+                    }
+
+                    <div class="col-sm-6">
+
+                        @Html.ActionLink("Categories", "Index", "Home")
+
+                    </div>
+
+                    <div class="col-sm-6">
+
+                        @Html.ActionLink(CategoryName, "ListQuestions", "Post", new { @categoryId = catId, @page = 1 }, null)
+
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="col-sm-6" style="text-align:right">
+                    <ul class="pagination">
+                        @{
+                            int prevPage = 0;
+                            List<int> pagingList = ViewBag.pagingElems;
+
+                        }
+
+                        @for (int i = 0; i < pagingList.Count(); i++)
+                        {
+                            prevPage = pagingList[i];
+
+                            <li>
+                                @Html.ActionLink(pagingList[i].ToString(), "ListAnswers", "Post", new { @id = ViewBag.question.PostId, @page = pagingList[i] }, null)
+                            </li>
+
+
+                            if (i < pagingList.Count() - 1 && pagingList[i + 1] != pagingList[i] + 1)
+                            {
+                                <li>@Html.ActionLink("...", "Index", "Home") </li>
+
+                            }
+
+
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

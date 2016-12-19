@@ -19,7 +19,7 @@ namespace Forum.Controllers
         // GET: Post
         public ActionResult Index(int categoryId)
         {
-           // return View("ListQuestions");
+           
             return RedirectToAction("ListQuestions","Post", new { categoryId = categoryId });
         }
 
@@ -34,6 +34,7 @@ namespace Forum.Controllers
         [HttpPost]
         public ActionResult Search(SearchViewModel search)
         {
+
            if(search.Opition.Equals("Tags"))
             {
                 int id = new ForumDbContext().Tags.Where(x => x.Name.Equals(search.Word)).Select(x => x.Id).FirstOrDefault();
@@ -152,24 +153,20 @@ namespace Forum.Controllers
 
                 ViewBag.pagingElems = this.pagingNumbers(pageCount, page);
 
-                List<Object> model = new List<object>();
-
-               
-                int count =Math.Min( answers.Count(),page*postsPerPage);
+                
+                               
+                int count =Math.Min(answers.Count(),page*postsPerPage);
 
                 var answersPerPage = answers.Skip((page-1)*postsPerPage).Take(count).ToList();
 
-                model.Add(answersPerPage);
+                
+             
 
-                PostViewModel post = new PostViewModel();
-
-                model.Add(post);
-
-                return View(model);
+                return View(answersPerPage);
             }
         }
 
-        
+         
 
         [Authorize]
         public ActionResult CreatePost(int? categoryId)
@@ -179,9 +176,14 @@ namespace Forum.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+           
+
             ViewBag.categoryId = categoryId;
             return View();
+
         }
+
+        
 
         [HttpPost]
         [Authorize]
@@ -228,6 +230,8 @@ namespace Forum.Controllers
 
             return View(post);
         }
+
+        
 
         [HttpGet]
         public ActionResult Delete(int? id)

@@ -26,9 +26,9 @@
 
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4">
-                 @Html.RadioButtonFor(m=>m.Opition, "Questions")  Questions <br />
+                 @Html.RadioButtonFor(m=>m.Opition, "Questions", new { Checked = "checked" })  Questions <br />
                  @Html.RadioButtonFor(m=>m.Opition, "Answers") Answers<br />
-                 @Html.RadioButtonFor(m => m.Opition, "Tags", true) Tags    
+                 @Html.RadioButtonFor(m => m.Opition, "Tags") Tags    
                 </div>
             </div>
 
