@@ -8,100 +8,131 @@
     <div class="well" style="border-style:solid">
         <h2>Topics</h2>
 
-        <table class="table table-striped table-hover">
+        
             
                 
               
             
 
             
+        <div class="row">
+
+            <div class="col-sm-2">
+                @Html.ActionLink("New Topic", "CreatePost", "Post", new { @categoryid = ViewBag.categoryId }, new { @class = "btn btn-warning" })
+            </div>
+
+            @{
+                int catId = (int)ViewBag.categoryId;
+                var CategoryName = new Forum.Models.ForumDbContext().Categories.Where(x => x.Id == catId).FirstOrDefault().Name;
+            }
+
+            <div class="col-sm-2">
+
+                @Html.ActionLink("Categories", "Index", "Home")
+
+            </div>
+
+            <div class="col-sm-2">
+               
+                @Html.ActionLink(CategoryName, "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = 1 }, null)
                 
-                <tr>
-                    <td>
-                        @Html.ActionLink("New Topic", "CreatePost", "Post", new { @categoryid = ViewBag.categoryId }, new { @class = "btn btn-warning" })
-                    </td>
-                    
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td align="right">
-                        <ul class="pagination">
-                            @{
-                                int prevPage = 0;
-                                List<int> pagingList = ViewBag.pagingElems;
+            </div>
 
-                            }
+            
+            <div class="col-sm-4 col-sm-offset-2" style="text-align:right" >
 
-                            @for (int i = 0; i < pagingList.Count(); i++)
-                            {
-                                prevPage = pagingList[i];
+                <ul class="pagination">
+                    @{
+                        int prevPage = 0;
+                        List<int> pagingList = ViewBag.pagingElems;
+                    }
 
-                                <li>
-                                    @Html.ActionLink(pagingList[i].ToString(), "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = pagingList[i] }, null)
-                                </li>
+                    @for (int i = 0; i < pagingList.Count(); i++)
+                    {
+                        prevPage = pagingList[i];
+                        <li>
+                            @Html.ActionLink(pagingList[i].ToString(), "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = pagingList[i] }, null)
+                        </li>
+                        if (i < pagingList.Count() - 1 && pagingList[i + 1] != pagingList[i] + 1)
+                        {
+                            <li>@Html.ActionLink("...", "Index", "Home") </li>
 
+                        }
+                    }
+                </ul>
 
-                                if (i < pagingList.Count() - 1 && pagingList[i + 1] != pagingList[i] + 1)
-                                {
-                                    <li>@Html.ActionLink("...", "Index", "Home") </li>
+            </div>
 
-                                }
+        </div>
 
 
-                            }
-                        </ul>
-
-                    </td>
-
-                </tr>
 
 
-            <tr>
-                <th></th>
-                <th>Title</th>
-                <th>Answers</th>
-                <th>Views</th>
-                <th>Author Name</th>
-                <th>Author Picture</th>
-            </tr>
+
+        <div class="row">
+          
+            <div class="col-sm-7 col-sm-offset-1">
+                Title
+            </div>
+            <div class="col-sm-1">Answers</div>
+            <div class="col-sm-1">Views</div>
+            <div class="col-sm-1">Author Name</div>
+            <div class="cols-sm-1">Author Picture</div>
+        </div>
 
 
             @{int j = 0; }
                 @foreach (var question in Model)
                 {
                     @:
-                    <tr>
-                        <td align="center"><img  src="~/Content/images/topic.png"/></td>
-                        <td>@Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId, @page=1 }, null)</td>
+                    <div class="row">
+                        <div class="col-sm-1" align="center"><img src="~/Content/images/topic.png" /></div>
                         
-                        <td>@ViewBag.answersPerTopic[j]</td>
-                        @{j++;}
-                        
-                        <td>@question.Views</td>
-                        <td>@Html.ActionLink(question.Author.FullName, "Details", "Account", new { @id = question.Author.Id }, null)</td>
-                        
-                        <td>                      
-                            
+                        <div class="col-sm-7">
+                            <div class="row">
+                            @Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId, @page = 1 }, null)
+                           </div>
 
-                              
+                            @if (User.IsInRole("Admin") || question.isAuthor(User.Identity.Name))
+                            {
+                                <div class="row">
+                                    
+                                    <div class="col-sm-2 col-sm-offset-8">
+                                    @Html.ActionLink("Edit", "Edit", "Post", new { @id = question.PostId }, new { @class = "btn btn-success btn-xs" })
+                                    </div>
+                                    
+                                    <div class="cols-sm-2">
+                                    @Html.ActionLink("Delete", "Delete", "Post", new { @id = question.PostId }, new { @class = "btn btn-danger btn-xs" })
+                                    </div>
+
+                                </div>
+                            }
+                        </div>
+
+                        <div class="col-sm-1">@ViewBag.answersPerTopic[j]</div>
+                        @{j++;}
+
+                        <div class="col-sm-1">@question.Views</div>
+                        <div class="col-sm-1">@Html.ActionLink(question.Author.FullName, "Details", "Account", new { @id = question.Author.Id }, null)</div>
+
+                        <div  class="col-sm-1">
+
+
+
                             @{var imgUrl = Url.Content("~/Content/images/profile/" + question.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
-                              
-                            <object data="@imgUrl"  type="image/png"  height="30" width="30">
+
+                            <object data="@imgUrl" type="image/png" height="30" width="30">
                                 <img src="~/Content/images/Smiley.svg.png" height="30" width="30" />
                             </object>
 
-                               
-                            
-                       </td>
-                        @if (User.IsInRole("Admin") || question.isAuthor(User.Identity.Name))
-                        {
-                        <td>@Html.ActionLink("Edit", "Edit", "Post", new { @id = question.PostId }, new { @class = "btn btn-success btn-xs" })</td>
-                        <td>@Html.ActionLink("Delete", "Delete", "Post", new { @id = question.PostId }, new { @class = "btn btn-danger btn-xs" })</td>
-                        }
-                    </tr>
-                }
+
+
+                        </div>
+                       
+                    </div>
+             }
 
             
-        </table>
+        
     </div>
 </div>

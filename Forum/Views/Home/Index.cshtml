@@ -8,36 +8,54 @@
     <div class="well" style="border-style:none">
         <h2>Categories</h2>
 
-        <table class="borderless" style="font-size:30px">
-             
+        <div class="row" style="margin-top:5px">
 
+            <div class="col-sm-1"></div>
+            <div class="col-sm-5">
+                Category
+            </div>
+
+            <div class="col-sm-2">
+                Questions
+            </div>
             
-            <thead>
-                <tr>
-                    <td>Category</td>
-                    <td>Topics</td>
-                    <td>Views</td>
-                </tr>
-            </thead>
-                
-
-
-
-                @foreach (var category in Model)
-                {
-                    @:
-                    <tr>
-
-                        <td>@Html.ActionLink(category.Name, "ListQuestions", "Post", new { @categoryId = category.Id ,@page=1}, null)</td>
-                        
-                        <td>@category.Posts.Count()</td>
-                        @{ List<int?> l = category.Posts.Select(x => x.Views).ToList();}
-                        <td>@l.Sum()</td>
-                       
-                    </tr>
-                                }
-
+            <div class="col-sm-2">
+                Answers
+            </div>
             
-        </table>
+            <div class="col-sm-2">
+                Views
+            </div>
+
+        </div>
+
+            @foreach (var category in Model)
+            {
+                @:
+                <div class="row" style="margin-top:5px">
+                    
+                    <div class="col-sm-1">
+                        <img src="~/Content/images/topic.png" />
+                    </div>
+                    
+                    <div class="col-sm-5">
+                        @Html.ActionLink(category.Name, "ListQuestions", "Post", new { @categoryId = category.Id, @page = 1 }, null) 
+                    </div>
+
+                    <div class="col-sm-2">@category.Posts.Where(x=>x.ParentPostId==null).Count()</div>
+
+                    <div class="col-sm-2">
+                        @category.Posts.Where(x => x.ParentPostId != null).Count()
+                    </div>
+
+                    @{ List<int?> listViews = category.Posts.Select(x => x.Views).ToList();}
+                    <div class="col-sm-2">@listViews.Sum()</div>
+
+               </div>
+                        }
+
+
+       
+
     </div>
 </div>
