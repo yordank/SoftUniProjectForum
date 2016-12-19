@@ -160,6 +160,20 @@
 
                                 </div>
 
+                                @if (User.IsInRole("Admin") || ViewBag.question.isAuthor(User.Identity.Name))
+                                {
+                                    <div class="row" style="margin-top:5px">
+
+                                        <div class="col-sm-2">
+                                            @Html.ActionLink("Edit", "Edit", "Post", new { @id = ViewBag.question.PostId }, new { @class = "btn btn-success btn-xs" })
+                                            @Html.ActionLink("Delete", "Delete", "Post", new { @id = ViewBag.question.PostId }, new { @class = "btn btn-danger btn-xs" })
+                                        </div>
+
+                                        
+
+                                    </div>
+                                }
+
 
                             </div>
 
@@ -208,19 +222,32 @@
                             <div class="row">
 
                                 <div class="col-sm-10">
+                                    
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <h3>@answer.Title</h3>
                                         </div>
                                     </div>
+
                                     <div class="row">
-                                         
                                             <div class="col-sm-12">
                                                 @answer.Content
                                             </div>
-
-                                        
                                     </div>
+
+
+                                    @if (User.IsInRole("Admin") || answer.isAuthor(User.Identity.Name))
+                                    {
+                                        <div class="row" style="margin-top:5px">
+                                            <div class="col-sm-2">
+                                                @Html.ActionLink("Edit", "Edit", "Post", new { @id = answer.PostId }, new { @class = "btn btn-success btn-xs" })
+                                                @Html.ActionLink("Delete", "Delete", "Post", new { @id = answer.PostId }, new { @class = "btn btn-danger btn-xs" })
+                                            </div>
+                                        </div>
+                                    }
+
+
+
                                 </div>
 
 
