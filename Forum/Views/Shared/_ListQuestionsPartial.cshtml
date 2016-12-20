@@ -1,0 +1,49 @@
+﻿@model Forum.Models.Post
+
+@{int j = (int)@ViewData["answersCount"];}
+ 
+    
+    <div class="row">
+        <div class="col-sm-1" align="center"><img src="~/Content/images/topic.png" /></div>
+
+        <div class="col-sm-7">
+            <div class="row">
+                @Html.ActionLink(Model.Title, "ListAnswers", "Post", new { @id = Model.PostId, @page = 1 }, null)
+            </div>
+
+            @if (User.IsInRole("Admin") || Model.isAuthor(User.Identity.Name))
+            {
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        @Html.ActionLink("Edit", "Edit", "Post", new { @id = Model.PostId }, new { @class = "btn btn-success btn-xs" })
+                        @Html.ActionLink("Delete", "Delete", "Post", new { @id = Model.PostId }, new { @class = "btn btn-danger btn-xs" })
+                    </div>
+
+                </div>
+
+            }
+        </div>
+        
+        <div class="col-sm-1">@j.ToString()</div>
+     
+
+        <div class="col-sm-1">@Model.Views</div>
+        <div class="col-sm-1">@Html.ActionLink(Model.Author.FullName, "Details", "Account", new { @id = Model.Author.Id }, null)</div>
+
+        <div class="col-sm-1">
+
+
+
+            @{var imgUrl = Url.Content("~/Content/images/profile/" + Model.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
+
+            <object data="@imgUrl" type="image/png" height="30" width="30">
+                <img src="~/Content/images/Smiley.svg.png" height="30" width="30" />
+            </object>
+
+
+
+        </div>
+
+    </div>
+                

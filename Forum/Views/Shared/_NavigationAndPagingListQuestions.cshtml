@@ -1,0 +1,51 @@
+﻿
+<div class="row">
+
+    <div class="col-sm-2">
+        @Html.ActionLink("New Topic", "CreatePost", "Post", new { @categoryid = ViewBag.categoryId }, new { @class = "btn btn-warning" })
+    </div>
+
+    @{
+        int catId = (int)ViewBag.categoryId;
+        var CategoryName = new Forum.Models.ForumDbContext().Categories.Where(x => x.Id == catId).FirstOrDefault().Name;
+    }
+
+    <div class="col-sm-2">
+
+        @Html.ActionLink("Categories", "Index", "Home")
+
+    </div>
+
+    <div class="col-sm-2">
+
+        @Html.ActionLink(CategoryName, "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = 1 }, null)
+
+    </div>
+
+
+    <div class="col-sm-4 col-sm-offset-2" style="text-align:right">
+
+        <ul class="pagination">
+            @{
+                int prevPage = 0;
+                List<int> pagingList = ViewBag.pagingElems;
+            }
+
+            @for (int i = 0; i < pagingList.Count(); i++)
+            {
+                prevPage = pagingList[i];
+                <li>
+                    @Html.ActionLink(pagingList[i].ToString(), "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = pagingList[i] }, null)
+                </li>
+                if (i < pagingList.Count() - 1 && pagingList[i + 1] != pagingList[i] + 1)
+                {
+                    <li>@Html.ActionLink("...", "Index", "Home") </li>
+
+                }
+            }
+        </ul>
+
+    </div>
+
+</div>
+

@@ -8,67 +8,8 @@
     <div class="well" style="border-style:solid">
         <h2>Topics</h2>
 
-        
+        @Html.Partial("_NavigationAndPagingListQuestions")
             
-                
-              
-            
-
-            
-        <div class="row">
-
-            <div class="col-sm-2">
-                @Html.ActionLink("New Topic", "CreatePost", "Post", new { @categoryid = ViewBag.categoryId }, new { @class = "btn btn-warning" })
-            </div>
-
-            @{
-                int catId = (int)ViewBag.categoryId;
-                var CategoryName = new Forum.Models.ForumDbContext().Categories.Where(x => x.Id == catId).FirstOrDefault().Name;
-            }
-
-            <div class="col-sm-2">
-
-                @Html.ActionLink("Categories", "Index", "Home")
-
-            </div>
-
-            <div class="col-sm-2">
-               
-                @Html.ActionLink(CategoryName, "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = 1 }, null)
-                
-            </div>
-
-            
-            <div class="col-sm-4 col-sm-offset-2" style="text-align:right" >
-
-                <ul class="pagination">
-                    @{
-                        int prevPage = 0;
-                        List<int> pagingList = ViewBag.pagingElems;
-                    }
-
-                    @for (int i = 0; i < pagingList.Count(); i++)
-                    {
-                        prevPage = pagingList[i];
-                        <li>
-                            @Html.ActionLink(pagingList[i].ToString(), "ListQuestions", "Post", new { @categoryId = ViewBag.categoryId, @page = pagingList[i] }, null)
-                        </li>
-                        if (i < pagingList.Count() - 1 && pagingList[i + 1] != pagingList[i] + 1)
-                        {
-                            <li>@Html.ActionLink("...", "Index", "Home") </li>
-
-                        }
-                    }
-                </ul>
-
-            </div>
-
-        </div>
-
-
-
-
-
         <div class="row">
           
             <div class="col-sm-7 col-sm-offset-1">
@@ -84,51 +25,10 @@
             @{int j = 0; }
                 @foreach (var question in Model)
                 {
-                    @:
-                    <div class="row">
-                        <div class="col-sm-1" align="center"><img src="~/Content/images/topic.png" /></div>
-                        
-                        <div class="col-sm-7">
-                            <div class="row">
-                            @Html.ActionLink(question.Title, "ListAnswers", "Post", new { @id = question.PostId, @page = 1 }, null)
-                           </div>
+                    @Html.Partial("_ListQuestionsPartial",question, new ViewDataDictionary { { "answersCount", ViewBag.answersPerTopic[j] } })
 
-                            @if (User.IsInRole("Admin") || question.isAuthor(User.Identity.Name))
-                            {
-                                <div class="row">
-                                    
-                                    <div class="col-sm-3">
-                                    @Html.ActionLink("Edit", "Edit", "Post", new { @id = question.PostId }, new { @class = "btn btn-success btn-xs" })
-                                    @Html.ActionLink("Delete", "Delete", "Post", new { @id = question.PostId }, new { @class = "btn btn-danger btn-xs" })
-                                    </div>
-
-                                </div>
-
-                            }
-                        </div>
-
-                        <div class="col-sm-1">@ViewBag.answersPerTopic[j]</div>
-                        @{j++;}
-
-                        <div class="col-sm-1">@question.Views</div>
-                        <div class="col-sm-1">@Html.ActionLink(question.Author.FullName, "Details", "Account", new { @id = question.Author.Id }, null)</div>
-
-                        <div  class="col-sm-1">
-
-
-
-                            @{var imgUrl = Url.Content("~/Content/images/profile/" + question.Author.UserName + ".png") + "?time=" + DateTime.Now.ToString(); }
-
-                            <object data="@imgUrl" type="image/png" height="30" width="30">
-                                <img src="~/Content/images/Smiley.svg.png" height="30" width="30" />
-                            </object>
-
-
-
-                        </div>
-                       
-                    </div>
-             }
+                    j++;
+                 }
 
             
         

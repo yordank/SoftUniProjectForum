@@ -298,6 +298,8 @@
     <Content Include="Views\Shared\_ListAnswersPartial.cshtml" />
     <Content Include="Views\Shared\_NavigationAndPagingListAnswers.cshtml" />
     <Content Include="Views\Shared\_ListAnswersCreatePost.cshtml" />
+    <Content Include="Views\Shared\_NavigationAndPagingListQuestions.cshtml" />
+    <Content Include="Views\Shared\_ListQuestionsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
