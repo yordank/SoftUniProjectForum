@@ -24,7 +24,7 @@
         <div class="container">
             <div class="well " style="background-color:#f5f694">
 
-                @Html.Partial("_ListAnswersPartial", (Forum.Models.Post)ViewBag.question)
+                @Html.Partial("_ListAnswersPartial", (Forum.Models.Post)ViewBag.question, new ViewDataDictionary { { "question", true } })
 
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="container">
                 <div class="well">
 
-                    @Html.Partial("_ListAnswersPartial", answer)
+                    @Html.Partial("_ListAnswersPartial", answer, new ViewDataDictionary { { "question", false } })
 
                 </div>
             </div>

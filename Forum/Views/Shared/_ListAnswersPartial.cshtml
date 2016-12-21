@@ -1,8 +1,8 @@
 ﻿@model Forum.Models.Post
 
 
-
-
+@{bool Isquestion = (bool)@ViewData["question"];}
+ 
 
             <div class="row">
 
@@ -19,6 +19,24 @@
                             @Model.Content
                         </div>
                     </div>
+
+                    @if (Isquestion)
+                    {
+                    <div class="row">
+
+                        <div class="col-sm-1">
+                            Tags
+                        </div>
+                        <div class="col-sm-11 pull-left">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                @Html.ActionLink((string)tag.Name, "List", "Tag", new { @id = tag.Id }, new { @class = "btn btn-default btn-xs" })
+                            }
+                        </div>
+
+
+                    </div>
+                    }
 
 
                     @if (User.IsInRole("Admin") || Model.isAuthor(User.Identity.Name))
